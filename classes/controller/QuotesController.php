@@ -53,15 +53,31 @@ class QuotesController{
 
   // Edit quotes
   public function edit() {
+
+    if (isset($_POST['simpan'])) {
+      $quote = $_POST['quote'];
+      $quote['user_id'] = 1;
+
+      $this->quotesTable->save($quote);
+
+      header('Location: index.php?action=list');
+
+    }
+
     if (isset($_GET['id'])) {
-      $joke = $this->quotesTable->findById($_GET['id']);
+      $quote = $this->quotesTable->findById($_GET['id']);
 
       $title = 'Edit Quote';
     } else {
       $title = 'Tambah Quote Baru';
     }
 
-    return [ 'template' => 'edit.html.php', 'title' => $title ];
+    return [ 'template' => 'edit.html.php',
+          'title' => $title,
+          'variables' => [
+              'quote' => $quote ?? null
+            ]
+          ];
 
   }
 }
